@@ -13,13 +13,13 @@ describe('Header', () => {
     mockedTasksCounter = 1;
 
     rerender(<Header tasksCounter={mockedTasksCounter} />);
-    
+
     expect(getByText('1 tarefa'));
 
     mockedTasksCounter = 2;
 
     rerender(<Header tasksCounter={mockedTasksCounter} />);
-    
+
     expect(getByText('2 tarefas'));
   });
 });
