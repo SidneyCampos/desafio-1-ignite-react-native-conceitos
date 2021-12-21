@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 
 import { Header } from '../components/Header';
 import { Task, TasksList } from '../components/TasksList';
@@ -16,10 +16,24 @@ export function Home() {
       title: newTaskTitle,
       done: false
     }
+    console.log(task.title)
 
-    // console.log("New Task")
+    newTaskTitle = task.title;
 
-    setTasks(oldState => [...oldState, task]);
+    const updatedTitles = tasks.map(task => ({ ...task }))
+
+    const foundTitle = updatedTitles.find(item => item.title === newTaskTitle)
+
+    if (foundTitle) {
+      Alert.alert(
+        "Task já cadastrada",
+        "Você não pode cadastrar uma task com o mesmo nome"
+      )
+      return
+    } else {
+      setTasks(oldState => [...oldState, task]);
+    }
+
   }
 
   function handleToggleTaskDone(id: number) {
@@ -37,10 +51,39 @@ export function Home() {
   }
 
   function handleRemoveTask(id: number) {
-    //TODO - remove task from state
-    setTasks(oldState => oldState.filter(
-      tasks => tasks.id !== id // Recuperar apenas as tasks que forem diferentes do parâmetro informado
-    ));
+
+    Alert.alert(
+      "Remover item",
+      "Tem certeza que deseja remover esse item?",
+      [
+        {
+          text: "Sim",
+          onPress: () =>
+            //TODO - remove task from state
+            setTasks(oldState => oldState.filter(
+              tasks => tasks.id !== id // Recuperar apenas as tasks que forem diferentes do parâmetro informado
+            )),
+        },
+        {
+          text: "Não",
+          style: "cancel"
+        }
+      ],
+    )
+  }
+
+  function handleEditTask(taskId: number, taskNewTitle: string) {
+
+    const updatedTasks = tasks.map(task => ({ ...task }))
+
+    const foundItem = updatedTasks.find(item => item.id === taskId);
+
+    if (!foundItem)
+      return
+
+    foundItem.title = taskNewTitle
+    setTasks(updatedTasks);
+
   }
 
   return (
